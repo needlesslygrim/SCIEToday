@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">SCIEToday</string>
+    <string name="app_tagline">Developed by scie.dev</string>
+    <string name="login">Login</string>
+    <string name="remember_me">Remember me</string>
 </resources>
