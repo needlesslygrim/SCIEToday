@@ -3,4 +3,8 @@
     <string name="app_tagline">Developed by scie.dev</string>
     <string name="login">Login</string>
     <string name="remember_me">Remember me</string>
+    <string name="home_screen">Home</string>
+    <string name="timetable_screen">Timetable</string>
+    <string name="homework_screen">Homework</string>
+    <string name="assessments_screen">Assessments</string>
 </resources>
