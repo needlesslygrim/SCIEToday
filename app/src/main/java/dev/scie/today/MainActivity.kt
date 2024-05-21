@@ -7,9 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
@@ -30,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.scie.today.ui.theme.SCIETodayTheme
 import kotlinx.serialization.Serializable
+import java.sql.Time
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,6 +129,9 @@ fun TodayApp(
 				currentScreen = currentDestination,
 			)
 		},
+		topBar = {
+			TodayTopAppBar(navBackStackEntry)
+		},
 		modifier = modifier
 	) { innerPadding ->
 		NavHost(
@@ -142,24 +150,59 @@ fun TodayApp(
 			}
 			composable<TodayScreen.AssessmentsScreen> {
 				val args = it.toRoute<TodayScreen.AssessmentsScreen>()
+				if (args.subject == null) {
+					Button(onClick = { navController.navigate(TodayScreen.AssessmentsScreen("History")) }) {
+						Text(text = "Go to history")
+					}
+				}
+				else {
+					Text("NONONO")
+				}
 			}
 		}
 	}
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TodayTopAppBar(
+	backStackEntry: NavBackStackEntry?
+) {
+	val currentScreen = backStackEntry?.destination
+	if (currentScreen?.hasRoute<TodayScreen.HomeScreen>() != false) {
+		CenterAlignedTopAppBar(title = { Text(stringResource(R.string.app_name)) })
+	} else {
+		MediumTopAppBar(
+			title = {
+				val headline = when {
+					currentScreen.hasRoute<TodayScreen.HomeScreen>() -> stringResource(R.string.home_screen)
+					currentScreen.hasRoute<TodayScreen.TimetableScreen>() -> stringResource(R.string.timetable_screen)
+					currentScreen.hasRoute<TodayScreen.HomeworkScreen>() -> stringResource(R.string.homework_screen)
+					currentScreen.hasRoute<TodayScreen.AssessmentsScreen>() -> {
+						val args = backStackEntry?.toRoute<TodayScreen.AssessmentsScreen>()
+						args?.subject ?: stringResource(R.string.assessments_screen)
+					}
+					else -> throw Exception("This shouldn't be possible")
+				}
+				
+				Text(text = headline)
+			}
+		)
+	}
+}
+
 @Composable
 fun TodayNavigationBar(
 	navigateToScreen: (TodayScreen) -> Unit,
 	currentScreen: NavDestination?,
-	modifier: Modifier = Modifier
 ) {
 	val onHomeScreen = currentScreen?.hasRoute<TodayScreen.HomeScreen>() ?: false
 	val onTimetableScreen = currentScreen?.hasRoute<TodayScreen.TimetableScreen>() ?: false
 	val onHomeworkScreen = currentScreen?.hasRoute<TodayScreen.HomeworkScreen>() ?: false
 	val onAssessmentScreen = currentScreen?.hasRoute<TodayScreen.AssessmentsScreen>()
 		?: false
-	NavigationBar(modifier = modifier) {
+	NavigationBar {
 		NavigationBarItem(
 			selected = onHomeScreen,
 			onClick = { navigateToScreen(TodayScreen.HomeScreen) },
