@@ -28,6 +28,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewDynamicColors
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import dev.scie.today.R
 
@@ -129,6 +132,9 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 }
 
 @Preview(showSystemUi = true, showBackground = true)
+@PreviewLightDark
+@PreviewScreenSizes
+@PreviewDynamicColors
 @Composable
 private fun LoginScreenPreview() {
 	LoginScreen()
