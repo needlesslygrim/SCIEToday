@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -21,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,9 +29,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.scie.today.ui.components.TodayNavigationBar
+import dev.scie.today.ui.navigation.AssessmentsScreen
+import dev.scie.today.ui.navigation.HomeworkScreen
+import dev.scie.today.ui.navigation.TimetableScreen
+import dev.scie.today.ui.navigation.TopLevelDestination
+import dev.scie.today.ui.screens.HomeScreen
 import dev.scie.today.ui.screens.TodayHomeScreen
 import dev.scie.today.ui.theme.SCIETodayTheme
-import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,35 +54,6 @@ class MainActivity : ComponentActivity() {
 	}
 }
 
-
-sealed interface TodayScreen {
-	val labelId: Int
-
-	@Serializable
-	data object HomeScreen : TodayScreen {
-		@StringRes
-		override val labelId: Int = R.string.home_screen
-	}
-
-	@Serializable
-	data object TimetableScreen : TodayScreen {
-		@StringRes
-		override val labelId: Int = R.string.timetable_screen
-	}
-
-	@Serializable
-	data object HomeworkScreen : TodayScreen {
-		@StringRes
-		override val labelId: Int = R.string.homework_screen
-	}
-
-	@Serializable
-	data class AssessmentsScreen(val subject: String?) : TodayScreen {
-		@StringRes
-		override val labelId: Int = R.string.assessments_screen
-	}
-}
-
 @Composable
 fun TodayApp(
 	navController: NavHostController = rememberNavController(),
@@ -86,57 +61,48 @@ fun TodayApp(
 ) {
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 	val currentDestination = navBackStackEntry?.destination
+	val currentScreen = currentDestination?.let {
+		when {
+			it.hasRoute<HomeScreen>() -> TopLevelDestination.HOME
+			it.hasRoute<TimetableScreen>() -> TopLevelDestination.TIMETABLE
+			it.hasRoute<HomeworkScreen>() -> TopLevelDestination.HOMEWORK
+			it.hasRoute<AssessmentsScreen>() -> TopLevelDestination.ASSESSMENTS
+			else -> TopLevelDestination.HOME
+		}
+	} ?: TopLevelDestination.HOME
 	Scaffold(
 		bottomBar = {
 			TodayNavigationBar(
-				navigateToScreen = { page ->
-					when (page) {
-						is TodayScreen.HomeScreen -> navController.navigate(page) {
-							popUpTo<TodayScreen.HomeScreen> {
-								saveState = true
-							}
-							launchSingleTop = true
-							restoreState = true
+				navigateToScreen = { screen ->
+					navController.navigate(
+						when (screen) {
+							TopLevelDestination.HOME -> HomeScreen
+							TopLevelDestination.TIMETABLE -> TimetableScreen
+							TopLevelDestination.HOMEWORK -> HomeworkScreen
+							TopLevelDestination.ASSESSMENTS -> AssessmentsScreen()
 						}
-
-						is TodayScreen.AssessmentsScreen -> navController.navigate(page) {
-							popUpTo<TodayScreen.HomeScreen> {
-								saveState = true
-							}
-							launchSingleTop = true
-							restoreState = true
+					) {
+						popUpTo<HomeScreen> {
+							saveState = true
 						}
-
-						is TodayScreen.HomeworkScreen -> navController.navigate(page) {
-							popUpTo<TodayScreen.HomeScreen> {
-								saveState = true
-							}
-							launchSingleTop = true
-							restoreState = true
-						}
-
-						is TodayScreen.TimetableScreen -> navController.navigate(page) {
-							popUpTo<TodayScreen.HomeScreen> {
-								saveState = true
-							}
-							launchSingleTop = true
-							restoreState = true
-						}
+						launchSingleTop = true
+						restoreState = true
 					}
+
 				},
-				currentScreen = currentDestination,
+				currentScreen = currentScreen,
 			)
 		},
 		topBar = {
-			TodayTopAppBar(navBackStackEntry)
+			TodayTopAppBar(currentScreen, navBackStackEntry)
 		},
 		modifier = modifier
 	) { innerPadding ->
 		NavHost(
 			navController = navController,
-			startDestination = TodayScreen.HomeScreen,
+			startDestination = HomeScreen,
 		) {
-			composable<TodayScreen.HomeScreen> {
+			composable<HomeScreen> {
 				TodayHomeScreen(
 					onClickMainCard = {},
 
@@ -155,15 +121,15 @@ fun TodayApp(
 				)
 			}
 
-			composable<TodayScreen.TimetableScreen> {
+			composable<TimetableScreen> {
 
 			}
-			composable<TodayScreen.HomeworkScreen> {
+			composable<HomeworkScreen> {
 			}
-			composable<TodayScreen.AssessmentsScreen> {
-				val args = it.toRoute<TodayScreen.AssessmentsScreen>()
+			composable<AssessmentsScreen> {
+				val args = it.toRoute<AssessmentsScreen>()
 				if (args.subject == null) {
-					Button(onClick = { navController.navigate(TodayScreen.AssessmentsScreen("History")) }) {
+					Button(onClick = { navController.navigate(AssessmentsScreen("History")) }) {
 						Text(text = "Go to history")
 					}
 				} else {
@@ -178,29 +144,28 @@ fun TodayApp(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayTopAppBar(
-	backStackEntry: NavBackStackEntry?
+	currentScreen: TopLevelDestination,
+	navBackStackEntry: NavBackStackEntry?
 ) {
-	val currentScreen = backStackEntry?.destination
-	if (currentScreen?.hasRoute<TodayScreen.HomeScreen>() != false) {
-		CenterAlignedTopAppBar(title = { Text(stringResource(R.string.app_name)) })
-	} else {
-		MediumTopAppBar(
-			title = {
-				val headline = when {
-					currentScreen.hasRoute<TodayScreen.HomeScreen>() -> stringResource(R.string.home_screen)
-					currentScreen.hasRoute<TodayScreen.TimetableScreen>() -> stringResource(R.string.timetable_screen)
-					currentScreen.hasRoute<TodayScreen.HomeworkScreen>() -> stringResource(R.string.homework_screen)
-					currentScreen.hasRoute<TodayScreen.AssessmentsScreen>() -> {
-						val args = backStackEntry.toRoute<TodayScreen.AssessmentsScreen>()
-						args?.subject ?: stringResource(R.string.assessments_screen)
-					}
-
-					else -> throw Exception("This shouldn't be possible")
+	when (currentScreen) {
+		TopLevelDestination.HOME -> CenterAlignedTopAppBar(title = { Text(stringResource(R.string.app_name)) })
+		else -> {
+			MediumTopAppBar(
+				title = {
+					Text(
+						when (currentScreen) {
+							TopLevelDestination.ASSESSMENTS -> {
+								// This shouldn't be null, because we are definitely on a page. I think this is the
+								// correct assumption of how it works. :^)
+								val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
+								args.subject ?: stringResource(currentScreen.screenNameId)
+							}
+							else -> stringResource(currentScreen.screenNameId)
+						}
+					)
 				}
-
-				Text(text = headline)
-			}
-		)
+			)
+		}
 	}
 }
 

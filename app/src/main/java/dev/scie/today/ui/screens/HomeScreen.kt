@@ -30,6 +30,11 @@ import androidx.compose.ui.unit.dp
 import dev.scie.today.TodayAppFunction
 import dev.scie.today.allAppFunctions
 import dev.scie.today.ui.theme.SCIETodayTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object HomeScreen
+
 
 @Composable
 fun TodayHomeScreen(
