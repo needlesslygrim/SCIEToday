@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -160,6 +159,7 @@ fun TodayTopAppBar(
 								val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
 								args.subject ?: stringResource(currentScreen.screenNameId)
 							}
+
 							else -> stringResource(currentScreen.screenNameId)
 						}
 					)
