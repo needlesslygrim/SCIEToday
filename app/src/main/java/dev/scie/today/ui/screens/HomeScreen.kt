@@ -21,19 +21,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import dev.scie.today.R
 import dev.scie.today.TodayAppFunction
 import dev.scie.today.allAppFunctions
 import dev.scie.today.ui.theme.SCIETodayTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object HomeScreen
+public data object HomeScreen
 
 
 @Composable
@@ -54,10 +56,10 @@ fun TodayHomeScreen(
 	modifier: Modifier = Modifier,
 ) {
 	Column(
-		verticalArrangement = Arrangement.spacedBy(8.dp),
+		verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
 		modifier = modifier
 			.verticalScroll(rememberScrollState())
-			.padding(horizontal = 16.dp)
+			.padding(horizontal = dimensionResource(R.dimen.padding_medium))
 
 	) {
 		OutlinedCard(
@@ -97,7 +99,7 @@ fun TodayHomeScreen(
 
 
 		Column(
-			verticalArrangement = Arrangement.spacedBy(8.dp),
+			verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
 			horizontalAlignment = Alignment.CenterHorizontally,
 		) {
 			for (appFunctionPair in allAppFunctions.chunked(2)) {

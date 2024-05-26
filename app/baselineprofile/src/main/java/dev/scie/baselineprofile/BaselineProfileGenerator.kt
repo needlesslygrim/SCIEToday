@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
 import org.junit.Rule
 import org.junit.Test
@@ -57,15 +58,52 @@ class BaselineProfileGenerator {
 			pressHome()
 			startActivityAndWait()
 
+			// Get the 'Home' button on the bottom navigation bar.
 			val home = device.findObject(By.text("Home"))
+			// Get the 'Timetable' button on the bottom navigation bar.
 			val timetable = device.findObject(By.text("Timetable"))
 
-			for (i in 0..10) {
-				home.click()
-				device.wait(Until.hasObject(By.text("Mon")), 500)
+			timetable.click()
+			device.wait(Until.hasObject(By.text("Mon")), 500)
+			device.findObject(By.text("Tue"))?.click()
+			device.waitForIdle()
+
+			device.findObject(By.text("Mon"))?.click()
+
+			device.waitForIdle()
+
+			home.click()
+			if (device.wait(Until.hasObject(By.text("Web CMS")), 5000) == null) {
 				timetable.click()
-				device.wait(Until.hasObject(By.text("Web CMS")), 500)
+				device.waitForIdle()
+				home.click()
+				device.wait(Until.hasObject(By.text("Web CMS")), 2000)
 			}
+
+			device.findObject(By.text("Web CMS"))?.also {
+				it.scroll(Direction.DOWN, 100f)
+				it.scroll(Direction.UP, 100f)
+			}
+
+			device.waitForIdle()
+
+			timetable.click()
+			device.waitForIdle()
+
+			device.pressBack()
+			if (device.wait(Until.hasObject(By.text("Web CMS")), 5000) == null) {
+				timetable.click()
+				device.waitForIdle()
+				home.click()
+				device.wait(Until.hasObject(By.text("Web CMS")), 2000)
+			}
+
+			device.findObject(By.text("Web CMS"))?.also {
+				it.scroll(Direction.DOWN, 100f)
+				it.scroll(Direction.UP, 100f)
+			}
+
+
 		}
 	}
 }

@@ -32,8 +32,7 @@ enum class TopLevelDestination(
 	)
 }
 
-@Serializable
-data object TimetableScreen
+
 
 @Serializable
 data object HomeworkScreen
