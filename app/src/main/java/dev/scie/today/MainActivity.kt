@@ -7,21 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.scie.today.ui.components.TodayNavigationBar
+import dev.scie.today.ui.components.TodayTopAppBar
 import dev.scie.today.ui.navigation.AssessmentsScreen
 import dev.scie.today.ui.navigation.HomeworkScreen
 import dev.scie.today.ui.navigation.TodayAppFunction
@@ -181,78 +174,6 @@ fun TodayApp(
 		}
 	}
 
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TodayTopAppBar(
-	currentScreen: TodayScreen,
-	navigateUp: () -> Unit,
-	canNavigateBack: Boolean,
-	navBackStackEntry: NavBackStackEntry?
-) {
-	when (currentScreen) {
-		is TodayScreen.TopLevel  -> {
-			if (currentScreen.topLevelDestination == TopLevelDestination.ASSESSMENTS) {
-				// Shouldn't be null
-				val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
-				if (args.subject != null) {
-					TodaySmallTopAppBar(
-						title = args.subject,
-						canNavigateBack = canNavigateBack,
-						navigateUp = navigateUp
-					)
-					
-					return
-				}
-			}
-
-			CenterAlignedTopAppBar(
-				title = {
-					Text(
-						stringResource(
-							if (currentScreen.topLevelDestination == TopLevelDestination.HOME) {
-								R.string.app_name
-							} else {
-								currentScreen.topLevelDestination.screenNameId
-							}
-						)
-					)
-				}
-			)
-		}
-		is TodayScreen.AppFunction -> {
-			TodaySmallTopAppBar(
-				title = stringResource(currentScreen.appFunction.nameId),
-				canNavigateBack = canNavigateBack,
-				navigateUp = navigateUp
-			)
-		}
-	}
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TodaySmallTopAppBar(
-	title: String,
-	canNavigateBack: Boolean,
-	navigateUp: () -> Unit,
-	modifier: Modifier = Modifier
-) {
-	TopAppBar(
-		title = { Text(title) },
-		navigationIcon = {
-			if (canNavigateBack) {
-				IconButton(onClick = navigateUp) {
-					Icon(
-						painter = painterResource(R.drawable.ic_arrow_back),
-						contentDescription = stringResource(R.string.go_back)
-					)
-				}
-			}
-		},
-		modifier = modifier
-	)
 }
 
 
