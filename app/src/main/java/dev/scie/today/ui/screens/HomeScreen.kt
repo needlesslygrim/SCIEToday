@@ -23,23 +23,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import dev.scie.today.R
-import dev.scie.today.TodayAppFunction
-import dev.scie.today.allAppFunctions
+import dev.scie.today.ui.navigation.TodayAppFunction
 import dev.scie.today.ui.theme.SCIETodayTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data object HomeScreen
+data object HomeScreen
 
 
 @Composable
-fun TodayHomeScreen(
+fun HomeScreen(
 	onClickMainCard: () -> Unit,
 
 	onClickBulletinCard: () -> Unit,
@@ -52,6 +52,8 @@ fun TodayHomeScreen(
 	nextHomeworkAssignmentLabel: String?,
 	nextHomeworkAssignmentDueDate: String?,
 	onClickHomeworkCard: () -> Unit,
+
+	onClickAppFunction: (TodayAppFunction) -> Unit,
 
 	modifier: Modifier = Modifier,
 ) {
@@ -102,8 +104,8 @@ fun TodayHomeScreen(
 			verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
 			horizontalAlignment = Alignment.CenterHorizontally,
 		) {
-			for (appFunctionPair in allAppFunctions.chunked(2)) {
-				AppFunctionRow(appFunctionPair)
+			for (appFunctionPair in TodayAppFunction.entries.chunked(2)) {
+				AppFunctionRow(appFunctionPair, onClickAppFunction)
 			}
 		}
 
@@ -114,6 +116,7 @@ fun TodayHomeScreen(
 @Composable
 fun AppFunctionRow(
 	appFunctionPair: List<TodayAppFunction>,
+	onClickAppFunction: (TodayAppFunction) -> Unit,
 	modifier: Modifier = Modifier
 ) {
 	val left = appFunctionPair.first()
@@ -123,15 +126,15 @@ fun AppFunctionRow(
 		modifier = modifier
 	) {
 		AppFunctionCard(
-			functionName = left.name,
+			functionName = stringResource(left.nameId),
 			functionIcon = left.icon,
-			onClick = { /*TODO*/ },
+			onClick = { onClickAppFunction(left) },
 			modifier = Modifier.weight(1f)
 		)
 		AppFunctionCard(
-			functionName = right.name,
+			functionName = stringResource(right.nameId),
 			functionIcon = right.icon,
-			onClick = { /*TODO*/ },
+			onClick = { onClickAppFunction(right) },
 			modifier = Modifier.weight(1f)
 		)
 	}
@@ -171,7 +174,7 @@ fun AppFunctionCard(
 @Composable
 private fun TodayHomeScreenPreview() {
 	SCIETodayTheme {
-		TodayHomeScreen(
+		HomeScreen(
 			onClickMainCard = {},
 
 			latestNoticeDate = "02-02-2024",
@@ -185,6 +188,7 @@ private fun TodayHomeScreenPreview() {
 			nextHomeworkAssignmentDueDate = null,
 			onClickHomeworkCard = {},
 
+			onClickAppFunction = {}
 			)
 	}
 

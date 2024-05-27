@@ -5,9 +5,13 @@ import androidx.annotation.StringRes
 import dev.scie.today.R
 import kotlinx.serialization.Serializable
 
+/** A 'top level destination' of the app, i.e. all screens shown in the navigatin bar. */
 enum class TopLevelDestination(
+	/** The icon used by the navigation bar when a screen is active. */
 	@DrawableRes val selectedIcon: Int,
+	/** The icon used by the navigation bar when a screen is inactive. */
 	@DrawableRes val unselectedIcon: Int,
+	/** The name of the screen shown to the user. */
 	@StringRes val screenNameId: Int
 ) {
 	HOME(

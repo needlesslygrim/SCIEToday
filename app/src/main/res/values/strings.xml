@@ -28,4 +28,17 @@
     <string name="subject_morning_registration">Morning Registration</string>
     <string name="subject_tutorial">Tutorial</string>
     <string name="subject_eca">EPQ</string>
+    <string name="web_cms">Web CMS</string>
+    <string name="exam_timetable">Exam Timetable</string>
+    <string name="attendance">Attendance</string>
+    <string name="announcements">Announcements</string>
+    <string name="calendar">Calendar</string>
+    <string name="report">Report</string>
+    <string name="leave">Leave</string>
+    <string name="go_back">Go back</string>
+    <string name="navigate_web_view_back">Navigate Web CMS backwards</string>
+    <string name="navigate_web_view_forwards">Navigate Web CMS forwards</string>
+    <string name="zoom_in_web_view">Zoom in Web CMS</string>
+    <string name="zoom_out_web_view">Zoom out Web CMS</string>
+    <string name="navigate_web_view_home">Navigate to Web CMS home</string>
 </resources>

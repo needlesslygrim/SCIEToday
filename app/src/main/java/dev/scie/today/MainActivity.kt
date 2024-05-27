@@ -4,26 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.DrawableRes
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -36,12 +32,14 @@ import androidx.navigation.toRoute
 import dev.scie.today.ui.components.TodayNavigationBar
 import dev.scie.today.ui.navigation.AssessmentsScreen
 import dev.scie.today.ui.navigation.HomeworkScreen
+import dev.scie.today.ui.navigation.TodayAppFunction
+import dev.scie.today.ui.navigation.TodayScreen
 import dev.scie.today.ui.navigation.TopLevelDestination
 import dev.scie.today.ui.screens.HomeScreen
 import dev.scie.today.ui.screens.Lesson
 import dev.scie.today.ui.screens.Subject
 import dev.scie.today.ui.screens.TimetableScreen
-import dev.scie.today.ui.screens.TodayHomeScreen
+import dev.scie.today.ui.screens.WebCMSScreen
 import dev.scie.today.ui.theme.SCIETodayTheme
 
 class MainActivity : ComponentActivity() {
@@ -88,13 +86,14 @@ fun TodayApp(
 	val currentDestination = navBackStackEntry?.destination
 	val currentScreen = currentDestination?.let {
 		when {
-			it.hasRoute<HomeScreen>() -> TopLevelDestination.HOME
-			it.hasRoute<TimetableScreen>() -> TopLevelDestination.TIMETABLE
-			it.hasRoute<HomeworkScreen>() -> TopLevelDestination.HOMEWORK
-			it.hasRoute<AssessmentsScreen>() -> TopLevelDestination.ASSESSMENTS
-			else -> TopLevelDestination.HOME
+			it.hasRoute<HomeScreen>() -> TodayScreen.TopLevel(TopLevelDestination.HOME)
+			it.hasRoute<TimetableScreen>() -> TodayScreen.TopLevel(TopLevelDestination.TIMETABLE)
+			it.hasRoute<HomeworkScreen>() -> TodayScreen.TopLevel(TopLevelDestination.HOMEWORK)
+			it.hasRoute<AssessmentsScreen>() -> TodayScreen.TopLevel(TopLevelDestination.ASSESSMENTS)
+			it.hasRoute<WebCMSScreen>() -> TodayScreen.AppFunction(TodayAppFunction.WEB_CMS)
+			else -> TodayScreen.TopLevel(TopLevelDestination.HOME)
 		}
-	} ?: TopLevelDestination.HOME
+	} ?: TodayScreen.TopLevel(TopLevelDestination.HOME)
 
 	Scaffold(
 		bottomBar = {
@@ -116,11 +115,16 @@ fun TodayApp(
 					}
 
 				},
-				currentScreen = currentScreen,
+				currentScreen = if (currentScreen is TodayScreen.TopLevel) { currentScreen.topLevelDestination } else {  TopLevelDestination.HOME },
 			)
 		},
 		topBar = {
-			TodayTopAppBar(currentScreen, navBackStackEntry)
+			TodayTopAppBar(
+				currentScreen = currentScreen,
+				navBackStackEntry = navBackStackEntry,
+				canNavigateBack = navController.previousBackStackEntry != null,
+				navigateUp = {  navController.popBackStack() }
+			)
 		},
 		modifier = modifier
 	) { innerPadding ->
@@ -130,7 +134,7 @@ fun TodayApp(
 			startDestination = HomeScreen,
 		) {
 			composable<HomeScreen> {
-				TodayHomeScreen(
+				HomeScreen(
 					onClickMainCard = {},
 
 					latestNoticeDate = "02-02-2024",
@@ -144,10 +148,16 @@ fun TodayApp(
 					nextHomeworkAssignmentDueDate = null,
 					onClickHomeworkCard = {},
 
+					onClickAppFunction = { appFunction ->
+						when (appFunction) {
+							TodayAppFunction.WEB_CMS -> navController.navigate(WebCMSScreen)
+							else -> Unit
+						}
+					},
+
 					modifier = paddingModifier
 				)
 			}
-
 			composable<TimetableScreen> {
 				TimetableScreen(
 					lessons = sampleLessons,
@@ -165,6 +175,9 @@ fun TodayApp(
 					Text("NONONO")
 				}
 			}
+			composable<WebCMSScreen> {
+				WebCMSScreen(22901, modifier = Modifier.padding(innerPadding))
+			}
 		}
 	}
 
@@ -173,43 +186,74 @@ fun TodayApp(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayTopAppBar(
-	currentScreen: TopLevelDestination,
+	currentScreen: TodayScreen,
+	navigateUp: () -> Unit,
+	canNavigateBack: Boolean,
 	navBackStackEntry: NavBackStackEntry?
 ) {
 	when (currentScreen) {
-		TopLevelDestination.HOME -> CenterAlignedTopAppBar(title = { Text(stringResource(R.string.app_name)) })
-		else -> {
-			MediumTopAppBar(
+		is TodayScreen.TopLevel  -> {
+			if (currentScreen.topLevelDestination == TopLevelDestination.ASSESSMENTS) {
+				// Shouldn't be null
+				val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
+				if (args.subject != null) {
+					TodaySmallTopAppBar(
+						title = args.subject,
+						canNavigateBack = canNavigateBack,
+						navigateUp = navigateUp
+					)
+					
+					return
+				}
+			}
+
+			CenterAlignedTopAppBar(
 				title = {
 					Text(
-						when (currentScreen) {
-							TopLevelDestination.ASSESSMENTS -> {
-								// This shouldn't be null, because we are definitely on a page. I think this is the
-								// correct assumption of how it works. :^)
-								val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
-								args.subject ?: stringResource(currentScreen.screenNameId)
+						stringResource(
+							if (currentScreen.topLevelDestination == TopLevelDestination.HOME) {
+								R.string.app_name
+							} else {
+								currentScreen.topLevelDestination.screenNameId
 							}
-
-							else -> stringResource(currentScreen.screenNameId)
-						}
+						)
 					)
 				}
+			)
+		}
+		is TodayScreen.AppFunction -> {
+			TodaySmallTopAppBar(
+				title = stringResource(currentScreen.appFunction.nameId),
+				canNavigateBack = canNavigateBack,
+				navigateUp = navigateUp
 			)
 		}
 	}
 }
 
-data class TodayAppFunction(val name: String, @DrawableRes val icon: Int)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TodaySmallTopAppBar(
+	title: String,
+	canNavigateBack: Boolean,
+	navigateUp: () -> Unit,
+	modifier: Modifier = Modifier
+) {
+	TopAppBar(
+		title = { Text(title) },
+		navigationIcon = {
+			if (canNavigateBack) {
+				IconButton(onClick = navigateUp) {
+					Icon(
+						painter = painterResource(R.drawable.ic_arrow_back),
+						contentDescription = stringResource(R.string.go_back)
+					)
+				}
+			}
+		},
+		modifier = modifier
+	)
+}
 
-val allAppFunctions = listOf(
-	TodayAppFunction("Web CMS", R.drawable.ic_web_cms_unfilled),
-	TodayAppFunction("Exam Timetable", R.drawable.ic_hourglass_empty_unfilled),
-	TodayAppFunction("Attendance", R.drawable.ic_attendance_unfilled),
-	TodayAppFunction("Announcements", R.drawable.ic_breaking_news_unfilled),
-	TodayAppFunction("Calendar", R.drawable.ic_calendar_month_unfilled),
-	TodayAppFunction("Report", R.drawable.ic_assessment_unfilled),
-	TodayAppFunction("ECA", R.drawable.ic_eca_unfilled),
-	TodayAppFunction("Leave", R.drawable.ic_leave_unfilled)
-)
 
 

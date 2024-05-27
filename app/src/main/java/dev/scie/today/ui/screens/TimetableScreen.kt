@@ -33,6 +33,7 @@ import kotlinx.serialization.Serializable
 data object TimetableScreen
 
 /** A subject, e.g. Computer Science.*/
+// FIXME: Move out of this file.
 enum class Subject(@DrawableRes val icon: Int, @StringRes val label: Int) {
 	Mathematics(R.drawable.ic_calculate_unfilled, R.string.subject_mathematics),
 	ComputerScience(R.drawable.ic_code_unfilled, R.string.subject_computer_science),
@@ -53,19 +54,20 @@ enum class Subject(@DrawableRes val icon: Int, @StringRes val label: Int) {
 
 	EPQ(R.drawable.ic_epq_unfilled, R.string.subject_eca),
 
-	/** Morning registration isn't a subject, so it doesn't have an icon, as it won't have any
+	/* NOTE: Morning registration isn't a subject, so it doesn't have an icon, as it won't have any
 	 * assessments associated with it, therefore, it won't be shown on the assessments page with an
 	 * icon
 	 */
 	MorningRegistration(0, R.string.subject_morning_registration),
-	/** Tutorials aren't subjects, so they also don't have icons. */
+	/* NOTE: Tutorials aren't subjects, so they also don't have icons. */
 	// TODO: It may be worth making `Subject` into a sealed interface/class at some point, so that
 	// the type of tutorial can be stored as well.
 	Tutorial(0, R.string.subject_tutorial),
 }
 
 // FIXME: Use a better type to store the time of the class and classroom.
-/** An indivual lesson, which is associated with a subject, teacher, time, and classroom */
+// FIXME: Move out of this file into a `data` folder.
+/** An individual lesson, which is associated with a subject, teacher, time, and classroom */
 data class Lesson(
 	/** The subject of the lesson, e.g. [Mathematics][Subject.Mathematics]. */
 	val subject: Subject,
@@ -75,7 +77,7 @@ data class Lesson(
 	 * 1 and A1 Mathematics 2.
 	 *
 	 * Not shown to users on the timetable, unlike on CMS, as in my (needlesslygrim) opinion it is
-	 * useless information to most students most of the time.*/
+	 * useless information to most students most of the time. */
 	val className: String,
 	/** The time at which the lesson starts */
 	val startTime: String,
@@ -83,6 +85,7 @@ data class Lesson(
 	val teacher: String
 )
 
+/** Days of the week */
 val days = arrayOf(
 	R.string.timetable_monday,
 	R.string.timetable_tuesday,
