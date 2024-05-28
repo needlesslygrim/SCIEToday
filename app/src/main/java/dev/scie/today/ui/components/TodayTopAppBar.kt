@@ -13,9 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.toRoute
 import dev.scie.today.R
-import dev.scie.today.ui.navigation.AssessmentsScreen
-import dev.scie.today.ui.navigation.TodayScreen
-import dev.scie.today.ui.navigation.TopLevelDestination
+import dev.scie.today.navigation.AssessmentsScreen
+import dev.scie.today.navigation.TodayScreen
+import dev.scie.today.navigation.TopLevelDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

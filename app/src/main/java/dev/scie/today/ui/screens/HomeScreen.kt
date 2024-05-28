@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import dev.scie.today.R
-import dev.scie.today.ui.navigation.TodayAppFunction
+import dev.scie.today.navigation.TodayAppFunction
 import dev.scie.today.ui.theme.SCIETodayTheme
 import kotlinx.serialization.Serializable
 

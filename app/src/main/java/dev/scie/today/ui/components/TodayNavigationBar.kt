@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import dev.scie.today.ui.navigation.TopLevelDestination
+import dev.scie.today.navigation.TopLevelDestination
 import dev.scie.today.ui.theme.SCIETodayTheme
 
 

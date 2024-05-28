@@ -1,4 +1,4 @@
-package dev.scie.today.ui.navigation
+package dev.scie.today.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

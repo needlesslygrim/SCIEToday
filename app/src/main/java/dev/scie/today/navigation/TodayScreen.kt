@@ -1,4 +1,4 @@
-package dev.scie.today.ui.navigation
+package dev.scie.today.navigation
 
 /** A sealed class to represent a screen in the app. Stores either a [TopLevelDestination] or a
  * [TodayAppFunction]. Mainly used by the top app bar and navigation bar to determine which page is
