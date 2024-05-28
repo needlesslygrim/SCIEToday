@@ -55,6 +55,7 @@ fun TodayTopAppBar(
 				}
 			)
 		}
+
 		is TodayScreen.AppFunction -> {
 			TodaySmallTopAppBar(
 				title = stringResource(currentScreen.appFunction.nameId),

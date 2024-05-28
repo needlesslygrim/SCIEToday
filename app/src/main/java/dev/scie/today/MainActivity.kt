@@ -108,7 +108,11 @@ fun TodayApp(
 					}
 
 				},
-				currentScreen = if (currentScreen is TodayScreen.TopLevel) { currentScreen.topLevelDestination } else {  TopLevelDestination.HOME },
+				currentScreen = if (currentScreen is TodayScreen.TopLevel) {
+					currentScreen.topLevelDestination
+				} else {
+					TopLevelDestination.HOME
+				},
 			)
 		},
 		topBar = {
@@ -116,7 +120,7 @@ fun TodayApp(
 				currentScreen = currentScreen,
 				navBackStackEntry = navBackStackEntry,
 				canNavigateBack = navController.previousBackStackEntry != null,
-				navigateUp = {  navController.popBackStack() }
+				navigateUp = { navController.popBackStack() }
 			)
 		},
 		modifier = modifier

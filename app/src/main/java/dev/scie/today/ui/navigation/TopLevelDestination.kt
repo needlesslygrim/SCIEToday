@@ -37,7 +37,6 @@ enum class TopLevelDestination(
 }
 
 
-
 @Serializable
 data object HomeworkScreen
 

@@ -189,7 +189,7 @@ private fun TodayHomeScreenPreview() {
 			onClickHomeworkCard = {},
 
 			onClickAppFunction = {}
-			)
+		)
 	}
 
 }
