@@ -149,7 +149,7 @@ fun AppFunctionCard(
 ) {
 	OutlinedCard(
 		onClick = onClick,
-		modifier = modifier.height(56.dp)
+		modifier = modifier.height(52.dp)
 	) {
 		Row(
 			verticalAlignment = Alignment.CenterVertically,
