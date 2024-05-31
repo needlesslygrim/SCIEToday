@@ -15,13 +15,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.scie.today.navigation.AssessmentsScreen
-import dev.scie.today.navigation.HomeworkScreen
+import dev.scie.today.ui.screens.HomeworkScreen
 import dev.scie.today.navigation.TodayAppFunction
 import dev.scie.today.navigation.TodayScreen
 import dev.scie.today.navigation.TopLevelDestination
 import dev.scie.today.ui.components.TodayNavigationBar
 import dev.scie.today.ui.components.TodayTopAppBar
 import dev.scie.today.ui.screens.HomeScreen
+import dev.scie.today.ui.screens.HomeworkAssignment
 import dev.scie.today.ui.screens.Lesson
 import dev.scie.today.ui.screens.Subject
 import dev.scie.today.ui.screens.TimetableScreen
@@ -45,6 +46,21 @@ val sampleLessons = listOf(
 	), listOf(), listOf(), listOf()
 )
 
+/** Sample assignment list used for offline testing */
+// FIXME: Move elsewhere.
+val sampleAssignments = listOf(
+	HomeworkAssignment(
+		"standing waves", "A short description about sanding waves", "Phy-AS.E.PHY1", "2024-02-27"
+	), HomeworkAssignment(
+		"superposition of waves & interference", null, "Phy-AS.E.PHY1", "2024-01-29"
+	), HomeworkAssignment(
+		"Doppler effect",
+		"Pages 16-316 of the assignment booklet, some other long description that should overflow onto the next line",
+		"Phy-AS.E.PHY1",
+		"2024-01-23"
+	)
+)
+
 @Composable
 fun TodayApp(
 	navController: NavHostController = rememberNavController(),
@@ -62,6 +78,7 @@ fun TodayApp(
 			else -> TodayScreen.TopLevel(TopLevelDestination.HOME)
 		}
 	} ?: TodayScreen.TopLevel(TopLevelDestination.HOME)
+
 
 	Scaffold(
 		bottomBar = {
@@ -136,7 +153,13 @@ fun TodayApp(
 					modifier = paddingModifier
 				)
 			}
-			composable<HomeworkScreen> {}
+			composable<HomeworkScreen> {
+				HomeworkScreen(
+					assignments = sampleAssignments,
+					onMarkAssignmentDone = {},
+					modifier = Modifier.padding(innerPadding)
+				)
+			}
 			composable<AssessmentsScreen> {
 				val args = it.toRoute<AssessmentsScreen>()
 				if (args.subject == null) {

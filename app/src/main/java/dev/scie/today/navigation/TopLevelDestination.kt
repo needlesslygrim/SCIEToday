@@ -36,9 +36,5 @@ enum class TopLevelDestination(
 	)
 }
 
-
-@Serializable
-data object HomeworkScreen
-
 @Serializable
 data class AssessmentsScreen(val subject: String? = null)

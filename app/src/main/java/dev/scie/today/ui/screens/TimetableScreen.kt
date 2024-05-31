@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import dev.scie.today.R
+import dev.scie.today.dotWith
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -73,9 +74,7 @@ data class Lesson(
 	val classroom: String,
 	/** The long name which distinguishes different class groups from each other, e.g. A1 Mathematics
 	 * 1 and A1 Mathematics 2.
-	 *
-	 * Not shown to users on the timetable, unlike on CMS, as in my (needlesslygrim) opinion it is
-	 * useless information to most students most of the time. */
+	*/
 	val className: String,
 	/** The time at which the lesson starts */
 	val startTime: String,
@@ -130,7 +129,7 @@ fun TimetableScreen(
 			itemsIndexed(lessons[selectedDay]) { index, it ->
 				ListItem(
 					headlineContent = { Text(stringResource(it.subject.label)) },
-					overlineContent = { Text(it.startTime) },
+					overlineContent = { Text(it.startTime.dotWith(it.className)) },
 					supportingContent = { Text(it.teacher) },
 					trailingContent = { Text(it.classroom) }
 				)
