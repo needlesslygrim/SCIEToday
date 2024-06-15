@@ -2,11 +2,17 @@ package dev.scie.today.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,7 +25,7 @@ import dev.scie.today.ui.screens.HomeworkScreen
 import dev.scie.today.navigation.TodayAppFunction
 import dev.scie.today.navigation.TodayScreen
 import dev.scie.today.navigation.TopLevelDestination
-import dev.scie.today.ui.components.TodayNavigationBar
+import dev.scie.today.ui.components.TodayNavigationScaffold
 import dev.scie.today.ui.components.TodayTopAppBar
 import dev.scie.today.ui.screens.HomeScreen
 import dev.scie.today.ui.screens.HomeworkAssignment
@@ -73,107 +79,110 @@ fun TodayApp(
 			it.hasRoute<HomeScreen>() -> TodayScreen.TopLevel(TopLevelDestination.HOME)
 			it.hasRoute<TimetableScreen>() -> TodayScreen.TopLevel(TopLevelDestination.TIMETABLE)
 			it.hasRoute<HomeworkScreen>() -> TodayScreen.TopLevel(TopLevelDestination.HOMEWORK)
-			it.hasRoute<AssessmentsScreen>() -> TodayScreen.TopLevel(TopLevelDestination.ASSESSMENTS)
+			it.hasRoute<AssessmentsScreen>() -> TodayScreen.TopLevel(TopLevelDestination.GRADES)
 			it.hasRoute<WebCMSScreen>() -> TodayScreen.AppFunction(TodayAppFunction.WEB_CMS)
 			else -> TodayScreen.TopLevel(TopLevelDestination.HOME)
 		}
 	} ?: TodayScreen.TopLevel(TopLevelDestination.HOME)
 
 
-	Scaffold(
-		bottomBar = {
-			TodayNavigationBar(
-				navigateToScreen = { screen ->
-					navController.navigate(
-						when (screen) {
-							TopLevelDestination.HOME -> HomeScreen
-							TopLevelDestination.TIMETABLE -> TimetableScreen
-							TopLevelDestination.HOMEWORK -> HomeworkScreen
-							TopLevelDestination.ASSESSMENTS -> AssessmentsScreen()
-						}
-					) {
-						popUpTo<HomeScreen> {
-							saveState = true
-						}
-						launchSingleTop = true
-						restoreState = true
-					}
-
-				},
-				currentScreen = if (currentScreen is TodayScreen.TopLevel) {
-					currentScreen.topLevelDestination
-				} else {
-					TopLevelDestination.HOME
-				},
-			)
-		},
-		topBar = {
-			TodayTopAppBar(
-				currentScreen = currentScreen,
-				navBackStackEntry = navBackStackEntry,
-				canNavigateBack = navController.previousBackStackEntry != null,
-				navigateUp = { navController.popBackStack() }
-			)
-		},
-		modifier = modifier
-	) { innerPadding ->
-		val paddingModifier = Modifier.padding(innerPadding)
-		NavHost(
-			navController = navController,
-			startDestination = HomeScreen,
+	val navigateToScreen: (TopLevelDestination) -> Unit = { screen ->
+		navController.navigate(
+			when (screen) {
+				TopLevelDestination.HOME -> HomeScreen
+				TopLevelDestination.TIMETABLE -> TimetableScreen
+				TopLevelDestination.HOMEWORK -> HomeworkScreen
+				TopLevelDestination.GRADES -> AssessmentsScreen()
+			}
 		) {
-			composable<HomeScreen> {
-				HomeScreen(
-					onClickMainCard = {},
-
-					latestNoticeDate = "02-02-2024",
-					latestNoticeName = "2024 SCIE Jan Newsletter",
-					onClickNoticeCard = {},
-
-					latestBulletinName = "MCS Week Day 5",
-					onClickBulletinCard = {},
-
-					nextHomeworkAssignmentLabel = null,
-					nextHomeworkAssignmentDueDate = null,
-					onClickHomeworkCard = {},
-
-					onClickAppFunction = { appFunction ->
-						when (appFunction) {
-							TodayAppFunction.WEB_CMS -> navController.navigate(WebCMSScreen)
-							else -> Unit
-						}
-					},
-
-					modifier = paddingModifier
-				)
+			popUpTo<HomeScreen> {
+				saveState = true
 			}
-			composable<TimetableScreen> {
-				TimetableScreen(
-					lessons = sampleLessons,
-					modifier = paddingModifier
+			launchSingleTop = true
+			restoreState = true
+		}
+
+	}
+
+	TodayNavigationScaffold(
+		currentScreen =
+			if (currentScreen is TodayScreen.TopLevel) {
+				currentScreen.topLevelDestination
+			} else {
+				TopLevelDestination.HOME
+			},
+		navigateToScreen = navigateToScreen
+	) {
+		Scaffold(
+			topBar = {
+				TodayTopAppBar(
+					currentScreen = currentScreen,
+					navBackStackEntry = navBackStackEntry,
+					canNavigateBack = navController.previousBackStackEntry != null,
+					navigateUp = { navController.popBackStack() }
 				)
-			}
-			composable<HomeworkScreen> {
-				HomeworkScreen(
-					assignments = sampleAssignments,
-					onMarkAssignmentDone = {},
-					modifier = Modifier.padding(innerPadding)
-				)
-			}
-			composable<AssessmentsScreen> {
-				val args = it.toRoute<AssessmentsScreen>()
-				if (args.subject == null) {
-					Button(onClick = { navController.navigate(AssessmentsScreen("History")) }) {
-						Text(text = "Go to history")
-					}
-				} else {
-					Text("NONONO")
+			},
+			modifier = modifier
+		) { innerPadding ->
+			val paddingModifier = Modifier.padding(innerPadding)
+			NavHost(
+				navController = navController,
+				startDestination = HomeScreen,
+			) {
+				composable<HomeScreen> {
+					HomeScreen(
+						onClickMainCard = {},
+
+						latestNoticeDate = "02-02-2024",
+						latestNoticeName = "2024 SCIE Jan Newsletter",
+						onClickNoticeCard = {},
+
+						latestBulletinName = "MCS Week Day 5",
+						onClickBulletinCard = {},
+
+						nextHomeworkAssignmentLabel = null,
+						nextHomeworkAssignmentDueDate = null,
+						onClickHomeworkCard = {},
+
+						onClickAppFunction = { appFunction ->
+							when (appFunction) {
+								TodayAppFunction.WEB_CMS -> navController.navigate(WebCMSScreen)
+								else -> Unit
+							}
+						},
+
+						modifier = paddingModifier
+					)
 				}
-			}
-			composable<WebCMSScreen> {
-				WebCMSScreen(22901, modifier = Modifier.padding(innerPadding))
+				composable<TimetableScreen> {
+					TimetableScreen(
+						lessons = sampleLessons,
+						modifier = paddingModifier
+					)
+				}
+				composable<HomeworkScreen> {
+					HomeworkScreen(
+						assignments = sampleAssignments,
+						onMarkAssignmentDone = {},
+						modifier = Modifier.padding(innerPadding)
+					)
+				}
+				composable<AssessmentsScreen> {
+					val args = it.toRoute<AssessmentsScreen>()
+					if (args.subject == null) {
+						Button(onClick = { navController.navigate(AssessmentsScreen("History")) }) {
+							Text(text = "Go to history")
+						}
+					} else {
+						Text("NONONO")
+					}
+				}
+				composable<WebCMSScreen> {
+					WebCMSScreen(22901, modifier = Modifier.padding(innerPadding))
+				}
 			}
 		}
 	}
+
 
 }

@@ -29,10 +29,10 @@ enum class TopLevelDestination(
 		unselectedIcon = R.drawable.ic_assignment_unfilled,
 		screenNameId = R.string.homework_screen
 	),
-	ASSESSMENTS(
+	GRADES(
 		selectedIcon = R.drawable.ic_assessment_filled,
 		unselectedIcon = R.drawable.ic_assessment_unfilled,
-		screenNameId = R.string.assessments_screen
+		screenNameId = R.string.grades_screen
 	)
 }
 

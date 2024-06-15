@@ -6,7 +6,7 @@
     <string name="home_screen">Home</string>
     <string name="timetable_screen">Timetable</string>
     <string name="homework_screen">Homework</string>
-    <string name="assessments_screen">Assessments</string>
+    <string name="grades_screen">Grades</string>
     <string name="subject_mathematics">Mathematics</string>
     <string name="subject_computer_science">Computer Science</string>
     <string name="subject_physics">Physics</string>

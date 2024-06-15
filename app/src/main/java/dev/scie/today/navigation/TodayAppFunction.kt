@@ -18,8 +18,6 @@ enum class TodayAppFunction(
 	EXAM_TIMETABLE(R.drawable.ic_hourglass_empty_unfilled, R.string.exam_timetable),
 	ATTENDANCE(R.drawable.ic_attendance_unfilled, R.string.attendance),
 	ANNOUNCEMENTS(R.drawable.ic_breaking_news_unfilled, R.string.announcements),
-	CALENDAR(R.drawable.ic_calendar_month_unfilled, R.string.calendar),
-	REPORT(R.drawable.ic_assessment_unfilled, R.string.report),
 	ECA(R.drawable.ic_eca_unfilled, R.string.subject_eca),
 	LEAVE(R.drawable.ic_leave_unfilled, R.string.leave);
 }

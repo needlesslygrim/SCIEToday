@@ -27,7 +27,7 @@ fun TodayTopAppBar(
 ) {
 	when (currentScreen) {
 		is TodayScreen.TopLevel -> {
-			if (currentScreen.topLevelDestination == TopLevelDestination.ASSESSMENTS) {
+			if (currentScreen.topLevelDestination == TopLevelDestination.GRADES) {
 				// Shouldn't be null
 				val args = navBackStackEntry?.toRoute<AssessmentsScreen>()!!
 				if (args.subject != null) {
