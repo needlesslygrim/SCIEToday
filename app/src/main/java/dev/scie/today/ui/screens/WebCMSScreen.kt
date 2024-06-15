@@ -85,10 +85,9 @@ fun WebCMSScreen(
 		) {
 			LinearProgressIndicator(
 				progress = { animatedProgress },
-				strokeCap = StrokeCap.Round,
+
 				modifier = Modifier
 					.fillMaxWidth()
-					.clip(MaterialTheme.shapes.large)
 					.padding(horizontal = 20.dp, vertical = 4.dp)
 			)
 		}
