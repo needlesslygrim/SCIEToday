@@ -8,15 +8,15 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.8.2"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
-navigationCompose = "2.8.0-beta03"
 kotlinSerializationPlugin = "1.9.24"
-kotlinSerialization = "1.6.3"
+navigationCompose = "2.8.0-beta04"
+kotlinSerialization = "1.7.1"
 uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.2.4"
 baselineprofile = "1.2.3"
 profileinstaller = "1.3.1"
 androidWebkit = "1.11.0"
-material3AdaptiveNavigationSuite = "1.3.0-beta03"
+material3AdaptiveNavigationSuite = "1.3.0-beta04"
 
 
 [libraries]
@@ -40,7 +40,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
-androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidWebkit"}
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidWebkit" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
