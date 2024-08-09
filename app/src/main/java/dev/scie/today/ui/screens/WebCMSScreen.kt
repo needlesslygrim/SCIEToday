@@ -1,12 +1,10 @@
 package dev.scie.today.ui.screens
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.animation.AnimatedVisibility
@@ -31,13 +29,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import dev.scie.today.R
@@ -69,7 +63,7 @@ fun WebCMSScreen(
 	var cookieManager: CookieManager? by remember { mutableStateOf(null) }
 
 	var loadingProgress by rememberSaveable { mutableIntStateOf(0) }
-	var loadingFinished by remember { mutableStateOf(false) }
+	var loadingFinished by rememberSaveable { mutableStateOf(false) }
 	val animatedProgress by animateFloatAsState(
 		targetValue = loadingProgress / 100f,
 		animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
@@ -88,13 +82,14 @@ fun WebCMSScreen(
 
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(horizontal = 20.dp, vertical = 4.dp)
+					.padding(horizontal = 24.dp, vertical = 4.dp)
 			)
 		}
 
 		AndroidView(
 			factory = { context ->
 				WebView(context).apply {
+					@SuppressLint("SetJavaScriptEnabled")
 					settings.javaScriptEnabled = true
 					settings.builtInZoomControls = true
 					settings.displayZoomControls = false
@@ -125,12 +120,25 @@ fun WebCMSScreen(
 
 					loadUrl(homeURL)
 
-					goBack = { this.goBack() }
-					goForward = { this.goForward() }
+					goBack = {
+						if (this.canGoBack()) {
+							loadingFinished = false
+						}
+						this.goBack()
+					}
+					goForward = {
+						if (this.canGoForward()) {
+							loadingFinished = false
+						}
+						this.goForward()
+					}
 					zoomIn = { this.zoomIn() }
 					zoomOut = { this.zoomOut() }
 					zoomBy = { this.zoomBy(it) }
-					goHome = { this.loadUrl(homeURL)}
+					goHome = {
+						loadingFinished = false
+						this.loadUrl(homeURL)
+					}
 				}
 			},
 			update = {
