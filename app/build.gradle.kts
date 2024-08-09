@@ -8,12 +8,12 @@ plugins {
 
 android {
 	namespace = "dev.scie.today"
-	compileSdk = 34
+	compileSdk = 35
 
 	defaultConfig {
 		applicationId = "dev.scie.today"
 		minSdk = 29
-		targetSdk = 34
+		targetSdk = 35
 		versionCode = 200
 		versionName = "2.0"
 
