@@ -1,7 +1,8 @@
 plugins {
-	alias(libs.plugins.androidApplication)
-	alias(libs.plugins.jetbrainsKotlinAndroid)
-	alias(libs.plugins.jetbrainsKotlinSerialization)
+	alias(libs.plugins.android.application)
+	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.compose.compiler)
+	alias(libs.plugins.jetbrains.kotlin.serialization)
 	alias(libs.plugins.baselineprofile)
 }
 
@@ -24,7 +25,7 @@ android {
 
 	buildTypes {
 		release {
-			isMinifyEnabled = false
+			isMinifyEnabled = true
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
@@ -42,9 +43,7 @@ android {
 	buildFeatures {
 		compose = true
 	}
-	composeOptions {
-		kotlinCompilerExtensionVersion = "1.5.1"
-	}
+
 	packaging {
 		resources {
 			excludes += "/META-INF/{AL2.0,LGPL2.1}"
