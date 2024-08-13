@@ -3,7 +3,6 @@ plugins {
 	alias(libs.plugins.jetbrains.kotlin.android)
 	alias(libs.plugins.compose.compiler)
 	alias(libs.plugins.jetbrains.kotlin.serialization)
-	alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -30,7 +29,6 @@ android {
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
-			signingConfig = signingConfigs.getByName("debug")
 		}
 	}
 	compileOptions {
@@ -63,7 +61,6 @@ dependencies {
 	implementation(libs.androidx.material3.adaptive.navigation.suite)
 	implementation(libs.androidx.navigation.compose)
 	implementation(libs.kotlinx.serialization.json)
-	implementation(libs.androidx.profileinstaller)
 	implementation(libs.androidx.webkit)
 
 	testImplementation(libs.junit)
@@ -71,7 +68,6 @@ dependencies {
 	androidTestImplementation(libs.androidx.espresso.core)
 	androidTestImplementation(platform(libs.androidx.compose.bom))
 	androidTestImplementation(libs.androidx.ui.test.junit4)
-	"baselineProfile"(project(":app:baselineprofile"))
 	debugImplementation(libs.androidx.ui.tooling)
 	debugImplementation(libs.androidx.ui.test.manifest)
 }

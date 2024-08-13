@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SCIEToday"
 include(":app")
-include(":app:baselineprofile")
+ 
