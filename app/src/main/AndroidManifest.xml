@@ -14,6 +14,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="35"
         android:enableOnBackInvokedCallback="true">
+        <profileable android:shell="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

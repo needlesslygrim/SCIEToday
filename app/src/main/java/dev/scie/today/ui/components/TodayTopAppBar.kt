@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
@@ -78,7 +79,10 @@ fun TodaySmallTopAppBar(
 		title = { Text(title) },
 		navigationIcon = {
 			if (canNavigateBack) {
-				IconButton(onClick = navigateUp) {
+				IconButton(
+					onClick = navigateUp,
+					modifier = Modifier.testTag("navigation:back")
+				) {
 					Icon(
 						painter = painterResource(R.drawable.ic_arrow_back),
 						contentDescription = stringResource(R.string.go_back)

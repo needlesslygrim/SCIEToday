@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -83,6 +84,7 @@ fun WebCMSScreen(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(horizontal = 24.dp, vertical = 4.dp)
+					.testTag("webcms:loadingbar")
 			)
 		}
 
@@ -117,7 +119,7 @@ fun WebCMSScreen(
 							loadingProgress = newProgress
 						}
 					}
-
+					
 					loadUrl(homeURL)
 
 					goBack = {

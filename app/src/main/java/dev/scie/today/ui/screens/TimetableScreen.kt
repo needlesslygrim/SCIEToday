@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import dev.scie.today.R
@@ -91,7 +92,16 @@ val days = arrayOf(
 	R.string.timetable_friday
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+// TODO: Merch with `days`.
+/** Test tags for the segmented buttons for each day of the week */
+val dayTestTags = arrayOf(
+	"days:mon",
+	"days:tue",
+	"days:wed",
+	"days:thur",
+	"days:fri"
+)
+
 @Composable
 fun TimetableScreen(
 	// FIXME: Don't use nested list, create new type to hold each day.
@@ -115,7 +125,8 @@ fun TimetableScreen(
 						index = index,
 						count = days.size
 					),
-					icon = {}
+					icon = {},
+					modifier = Modifier.testTag(dayTestTags[index])
 				) {
 					Text(stringResource(label))
 				}

@@ -4,6 +4,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +24,6 @@ fun TodayNavigationScaffold(
 	NavigationSuiteScaffold(
 		navigationSuiteItems = {
 			TopLevelDestination.entries.forEach { topLevelDestination ->
-
 				val selected = currentScreen == topLevelDestination
 				item(
 					selected = selected,
@@ -39,7 +40,8 @@ fun TodayNavigationScaffold(
 							contentDescription = null
 						)
 					},
-					label = { Text(text = stringResource(topLevelDestination.screenNameId)) }
+					label = { Text(text = stringResource(topLevelDestination.screenNameId)) },
+					modifier = Modifier.testTag(topLevelDestination.testTag)
 				)
 			}
 		},

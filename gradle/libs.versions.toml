@@ -15,6 +15,10 @@ uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.2.4"
 androidWebkit = "1.11.0"
 material3AdaptiveNavigationSuite = "1.3.0-beta04"
+uiautomatorVersion = "2.3.0"
+benchmarkMacroJunit4Version = "1.2.4"
+baselineprofile = "1.2.3"
+profileinstaller = "1.3.1"
 
 
 [libraries]
@@ -36,6 +40,9 @@ androidx-material3-adaptive-navigation-suite = { group = "androidx.compose.mater
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization"}
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidWebkit" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomatorVersion" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4Version" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -43,4 +50,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-test = { id = "com.android.test", version.ref = "agp" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 
