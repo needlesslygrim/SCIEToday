@@ -24,4 +24,5 @@ package dev.scie.today.navigation
 sealed interface TodayScreen {
 	data class TopLevel(val topLevelDestination: TopLevelDestination) : TodayScreen
 	data class AppFunction(val appFunction: TodayAppFunction) : TodayScreen
+	data class UnderConstruction(val appFunction: TodayAppFunction?) : TodayScreen
 }

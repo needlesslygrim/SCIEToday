@@ -41,4 +41,5 @@
     <string name="zoom_in_web_view">Zoom in Web CMS</string>
     <string name="zoom_out_web_view">Zoom out Web CMS</string>
     <string name="navigate_web_view_home">Navigate to Web CMS home</string>
+    <string name="under_construction">This page is under construction</string>
 </resources>

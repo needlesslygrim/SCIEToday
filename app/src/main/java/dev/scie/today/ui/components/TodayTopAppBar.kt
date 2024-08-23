@@ -81,6 +81,14 @@ fun TodayTopAppBar(
 				navigateUp = navigateUp
 			)
 		}
+
+		is TodayScreen.UnderConstruction -> {
+			TodaySmallTopAppBar(
+				title = currentScreen.appFunction?.nameId?.let { stringResource(it) } ?: "How did you get here?",
+				canNavigateBack = canNavigateBack,
+				navigateUp = navigateUp
+			)
+		}
 	}
 }
 

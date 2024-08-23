@@ -1,19 +1,13 @@
 package dev.scie.today.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,8 +26,11 @@ import dev.scie.today.ui.screens.HomeScreen
 import dev.scie.today.ui.screens.HomeworkAssignment
 import dev.scie.today.ui.screens.Lesson
 import dev.scie.today.ui.screens.Subject
+import dev.scie.today.ui.screens.TAG
 import dev.scie.today.ui.screens.TimetableScreen
+import dev.scie.today.ui.screens.UnderConstructionScreen
 import dev.scie.today.ui.screens.WebCMSScreen
+import kotlinx.serialization.builtins.serializer
 
 /** Sample lessons used for offline testing */
 // FIXME: Move elsewhere.
@@ -82,6 +79,10 @@ fun TodayApp(
 			it.hasRoute<HomeworkScreen>() -> TodayScreen.TopLevel(TopLevelDestination.HOMEWORK)
 			it.hasRoute<AssessmentsScreen>() -> TodayScreen.TopLevel(TopLevelDestination.GRADES)
 			it.hasRoute<WebCMSScreen>() -> TodayScreen.AppFunction(TodayAppFunction.WEB_CMS)
+			it.hasRoute<UnderConstructionScreen>() -> {
+				val args = navBackStackEntry?.toRoute<UnderConstructionScreen>()
+				TodayScreen.UnderConstruction(args?.appFunction)
+			}
 			else -> TodayScreen.TopLevel(TopLevelDestination.HOME)
 		}
 	} ?: TodayScreen.TopLevel(TopLevelDestination.HOME)
@@ -148,7 +149,7 @@ fun TodayApp(
 						onClickAppFunction = { appFunction ->
 							when (appFunction) {
 								TodayAppFunction.WEB_CMS -> navController.navigate(WebCMSScreen)
-								else -> Unit
+								else -> navController.navigate(UnderConstructionScreen(appFunction))
 							}
 						},
 
@@ -170,20 +171,15 @@ fun TodayApp(
 				}
 				composable<AssessmentsScreen> {
 					val args = it.toRoute<AssessmentsScreen>()
-					if (args.subject == null) {
-						Button(onClick = { navController.navigate(AssessmentsScreen("History")) }) {
-							Text(text = "Go to history")
-						}
-					} else {
-						Text("NONONO")
-					}
+					UnderConstructionScreen()
 				}
 				composable<WebCMSScreen> {
 					WebCMSScreen(modifier = Modifier.padding(innerPadding))
 				}
+				composable<UnderConstructionScreen> {
+					UnderConstructionScreen()
+				}
 			}
 		}
 	}
-
-
 }

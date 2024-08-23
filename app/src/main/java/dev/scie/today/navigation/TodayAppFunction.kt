@@ -20,10 +20,12 @@ package dev.scie.today.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dev.scie.today.R
+import kotlinx.serialization.Serializable
 
 /** A function of the app, e.g. showing CMS in a WebView. These are displayed in a grid on the
  * home screen, and can be opened.
  */
+@Serializable
 enum class TodayAppFunction(
 	/** Resource ID of the icon shown on the home screen grid. */
 	@DrawableRes val icon: Int,
