@@ -15,27 +15,16 @@
  * see <https://www.gnu.org/licenses/>.
  */
 
-package dev.scie.today
+package dev.scie.today.lib.cmsConnector.cms
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.serialization.Serializable
 
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-	@Test
-	fun useAppContext() {
-		// Context of the app under test.
-		val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-		assertEquals("dev.scie.today", appContext.packageName)
-	}
-}
+@Serializable
+internal data class CMSAssembly(
+	val title: String,
+	val location: String,
+	// TODO: Consider using kotlinx-datetime to get a proper date here, as the date is returned in the format
+	//  `YYYY-MM-DD`, which is probably supported out of the box
+	val date: String,
+	val classes: String
+)

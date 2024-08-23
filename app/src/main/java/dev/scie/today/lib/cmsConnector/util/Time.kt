@@ -15,27 +15,16 @@
  * see <https://www.gnu.org/licenses/>.
  */
 
-package dev.scie.today
+package dev.scie.today.lib.cmsConnector.util
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
+@JvmInline
+value class Time private constructor(private val time: UInt) {
+	val hour get() = time.shr(16)
+	val minute get() = time.and(0xFFFFu)
 
-import org.junit.Test
-import org.junit.runner.RunWith
+	constructor(hour: UShort, minute: UShort) : this(hour.toUInt().shl(16) or minute.toUInt())
 
-import org.junit.Assert.*
-
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-	@Test
-	fun useAppContext() {
-		// Context of the app under test.
-		val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-		assertEquals("dev.scie.today", appContext.packageName)
+	override fun toString(): String {
+		return "Time(hour=$hour, minute=$minute)";
 	}
 }

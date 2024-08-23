@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2024 Erick Howard
+ *
+ * This file is part of SCIEToday.
+ *
+ * SCIEToday is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * SCIEToday is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SCIEToday. If not,
+ * see <https://www.gnu.org/licenses/>.
+ */
+
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
@@ -63,10 +80,20 @@ dependencies {
 	implementation(libs.androidx.material3.adaptive.navigation.suite)
 	implementation(libs.androidx.navigation.compose)
 	implementation(libs.kotlinx.serialization.json)
+	implementation(libs.ktor.client.core)
+	implementation(libs.kotlinx.coroutines.core)
+	implementation(libs.kotlinx.coroutines.android)
 	implementation(libs.androidx.webkit)
 	implementation(libs.androidx.profileinstaller)
+	implementation(libs.ktor.client.core)
+	implementation(libs.ktor.client.okhttp)
+	implementation(libs.ktor.client.content.negotiation)
+	implementation(libs.ktor.client.serialization.kotlinx.json)
 
 	testImplementation(libs.junit)
+	testImplementation(libs.kotlin.test)
+	testImplementation(libs.kotlin.test.junit)
+	testImplementation(libs.kotlinx.coroutines.test)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)
 	androidTestImplementation(platform(libs.androidx.compose.bom))
