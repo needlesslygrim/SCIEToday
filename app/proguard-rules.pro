@@ -20,5 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# This might be nessecary in the future, but for now it's not.
-#-keep, allowobfuscation, allowoptimization @kotlinx.serialization.Serializable class *
+-keep, allowoptimization, allowshrinking class dev.scie.today.navigation.TodayAppFunction
