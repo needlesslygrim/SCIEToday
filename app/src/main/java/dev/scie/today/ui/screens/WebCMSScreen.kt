@@ -46,11 +46,9 @@ object WebCMSScreen
 // TODO: Refactor to take webview out, as well as the webview toolbar.
 @Composable
 fun WebCMSScreen(
-	// FIXME: Use proper ID type to ensure that ID is valid.
-	userId: Int,
 	modifier: Modifier = Modifier
 ) {
-	val homeURL = "https://www.alevel.com.cn/user/s$userId/"
+	val homeURL = "https://cms.alevel.com.cn/cms"
 	
 	var goBack by remember { mutableStateOf({}) }
 	var goForward by remember { mutableStateOf({}) }
@@ -119,7 +117,7 @@ fun WebCMSScreen(
 							loadingProgress = newProgress
 						}
 					}
-					
+
 					loadUrl(homeURL)
 
 					goBack = {

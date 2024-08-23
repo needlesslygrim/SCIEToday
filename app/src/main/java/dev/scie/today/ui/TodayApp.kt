@@ -179,7 +179,7 @@ fun TodayApp(
 					}
 				}
 				composable<WebCMSScreen> {
-					WebCMSScreen(22901, modifier = Modifier.padding(innerPadding))
+					WebCMSScreen(modifier = Modifier.padding(innerPadding))
 				}
 			}
 		}
