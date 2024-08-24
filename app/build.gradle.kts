@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 /*
  * Copyright (c) 2024 Erick Howard
  *
@@ -23,7 +26,20 @@ plugins {
 	alias(libs.plugins.baselineprofile)
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+
 android {
+	signingConfigs {
+		create("release") {
+			keyAlias = keystoreProperties["keyAlias"] as String
+			keyPassword = keystoreProperties["keyPassword"] as String
+			storeFile = file(keystoreProperties["storeFile"] as String)
+			storePassword = keystoreProperties["storePassword"] as String
+		}
+	}
 	namespace = "dev.scie.today"
 	compileSdk = 35
 
@@ -47,7 +63,7 @@ android {
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
-			signingConfig = signingConfigs.getByName("debug")
+			signingConfig = signingConfigs.getByName("release")
 		}
 	}
 	compileOptions {
