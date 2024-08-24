@@ -15,7 +15,7 @@
  * see <https://www.gnu.org/licenses/>.
  */
 
-package dev.scie.today
+package dev.scie.today.lib
 
 
 /** Combine a string with another by inserting an interpunct (·) between the two strings.
