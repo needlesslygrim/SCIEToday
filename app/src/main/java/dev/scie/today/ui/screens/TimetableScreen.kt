@@ -128,7 +128,7 @@ val dayTestTags = arrayOf(
 /** Stores a nullable [Timetable.Event], a [TimeRange], and whether or not it is a double
  * period. Used so that double periods can be collapsed into one listing.
 */
-data class TimetableListing(val event: Timetable.Event?, val time: TimeRange, val doublePeriod: Boolean = false)
+data class TimetableListing(val event: Timetable.Event?, val time: TimeRange)
 
 @Composable
 fun TimetableScreen(
@@ -173,7 +173,6 @@ fun TimetableScreen(
 					timetableListings.add(TimetableListing(
 						event = event,
 						time = TimeRange(timeSlot.time.start, nextTimeSlot.time.end),
-						doublePeriod = true
 					))
 				}
 			}
@@ -211,7 +210,7 @@ fun TimetableScreen(
 		LazyColumn {
 			itemsIndexed(selectedDayTimetableListings) { index, period ->
 				if (period.event == null) { return@itemsIndexed }
-				PeriodListing(period.event, period.time, period.doublePeriod)
+				PeriodListing(period.event, period.time)
 
 				if (index < selectedDayTimetableListings.size - 1) {
 					HorizontalDivider()
@@ -226,37 +225,20 @@ fun TimetableScreen(
 private fun PeriodListing(
 	event: Timetable.Event,
 	time: TimeRange,
-	doublePeriod: Boolean = false
 ) {
 	if (event.subject != Subject.ECA) {
 		ListItem(
 			headlineContent = { Text(stringResource(event.subject.label)) },
 			overlineContent = { Text(event.teacher.dotWith(event.name)) },
 			supportingContent = { Text(time.toString()) },
-			trailingContent = {
-				Column(
-					verticalArrangement = Arrangement.SpaceBetween,
-					modifier = Modifier.height(56.dp)
-				) {
-					Text(event.room)
-					Text(if (doublePeriod) { "2" } else { "1" })
-				}
-			},
+			trailingContent = { Text(event.room) },
 		)
 	} else {
 		ListItem(
 			headlineContent = { Text(event.name) },
 			overlineContent = { Text(event.teacher.dotWith(stringResource(event.subject.label))) },
 			supportingContent = { Text(time.toString()) },
-			trailingContent = {
-				Column(
-					verticalArrangement = Arrangement.SpaceBetween,
-					modifier = Modifier.height(56.dp)
-				) {
-					Text(event.room)
-					Text(if (doublePeriod) { "2" } else { "1" })
-				}
-			},
+			trailingContent = { Text(event.room) },
 		)
 	}
 }
