@@ -17,7 +17,7 @@
 
 package dev.scie.today.lib.cmsConnector.cms
 
-import dev.scie.today.lib.cmsConnector.CMSType
+import dev.scie.today.lib.cmsConnector.cms.CMSType
 import dev.scie.today.lib.cmsConnector.Gender
 import dev.scie.today.lib.cmsConnector.House
 import dev.scie.today.lib.cmsConnector.UserInformation

@@ -18,7 +18,6 @@
 package dev.scie.today.lib.cmsConnector.cms
 
 import dev.scie.today.lib.cmsConnector.Attendance
-import dev.scie.today.lib.cmsConnector.CMSType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

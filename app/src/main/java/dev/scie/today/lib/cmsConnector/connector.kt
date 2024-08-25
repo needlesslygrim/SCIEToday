@@ -113,20 +113,6 @@ data class Attendance(val attendance: List<AttendanceRecord>) {
 	}
 }
 
-// FIXME: Remove from public API.
-/**
- * Most types from the CMS API should implement this interface, to provide a consistent conversion method. This is
- * "required" because the CMS API doesn't always have very good type definitions. However, if the original type is
- * sane, like [UserCredentials], then it is not necessary.
- * @see CMSType.toTodayType
- *
- */
-interface CMSType<T> {
-	/**
-	 * Converts this CMS type into its equivalent SCIEToday type.
-	 */
-	fun toTodayType(): T
-}
 
 @Serializable
 data class UserCredentials(val username: String, val password: String)
