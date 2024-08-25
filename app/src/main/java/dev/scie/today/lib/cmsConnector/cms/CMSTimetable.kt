@@ -20,6 +20,7 @@ package dev.scie.today.lib.cmsConnector.cms
 import dev.scie.today.lib.cmsConnector.CMSType
 import dev.scie.today.lib.cmsConnector.Timetable
 import dev.scie.today.lib.cmsConnector.util.TimeRange
+import dev.scie.today.ui.screens.Subject
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -62,12 +63,51 @@ internal data class CMSTimetable(
 			class NullField(fieldName: String) : EventConversionException("Field `$fieldName` is null")
 		}
 
+		// FIXME: More exception types.
 		override fun toTodayType(): Timetable.Event {
+			var subject: String = ""
+			var name: String = ""
+			this.name?.split('-', limit = 2)?.apply {
+				subject = this[0]
+				name = this[1]
+			} ?: throw Exception("Invalid class name")
+
 			return Timetable.Event(
 				id = this.id ?: throw EventConversionException.NullField("id"),
 				type = this.type?.toTodayType() ?: throw EventConversionException.NullField("type"),
-				name = this.name ?: throw EventConversionException.NullField("name"),
+				name = name,
+				subject = if (this.type.toTodayType() == Timetable.Event.Type.Lesson) {
+					when (subject) {
+						"Computer Science" -> Subject.ComputerScience
+						"Mathematics" -> Subject.Mathematics
+						"Physics" -> Subject.Physics
+						"Chemistry" -> Subject.Chemistry
+						"Biology" -> Subject.Biology
+
+						"English" -> Subject.English
+						"Chinese" -> Subject.Mandarin
+						"Spanish" -> Subject.Spanish
+						"Japanese" -> Subject.Japanese
+						"French" -> Subject.French
+
+						"History" -> Subject.History
+						"Geography" -> Subject.Geography
+						"Psychology" -> Subject.Psychology
+
+						"PE" -> Subject.PE
+
+						"EPQ" -> Subject.EPQ
+
+						"PSHE" -> Subject.PSHE
+						"Tutorial" -> Subject.Tutorial
+						"UCO" -> Subject.UCO
+						else -> throw Exception("Invalid subject")
+					}
+				} else {
+					Subject.ECA
+				},
 				room = this.room ?: throw EventConversionException.NullField("room"),
+				teacher = this.teacher ?: throw EventConversionException.NullField("teacher")
 			)
 		}
 	}
@@ -113,12 +153,32 @@ internal data class CMSTimetable(
 	override fun toTodayType(): Timetable {
 		val events = this.weekdays.map {
 			it.periods.mapIndexed { index, period ->
-				val times = TimeRange.lessonTimes[index]
+				val time = TimeRange.lessonTimes[index]
 				val timeSlot: Timetable.TimeSlot
 				when (period.events.size) {
-					0 -> timeSlot = Timetable.TimeSlot.Empty(times.start, times.end)
-					1 -> timeSlot =
-						Timetable.TimeSlot.Same(period.events[0].toTodayType(), times.start, times.end)
+					0 -> timeSlot = Timetable.TimeSlot.Empty(time)
+					1 -> {
+						timeSlot = when (period.events[0].weekType) {
+							"A" -> {
+								Timetable.TimeSlot.OneWeekOnly(
+									Timetable.Week.Type.WeekA,
+									period.events[0].toTodayType(),
+									time
+								)
+							}
+							"B" -> {
+								Timetable.TimeSlot.OneWeekOnly(
+									Timetable.Week.Type.WeekB,
+									period.events[0].toTodayType(),
+									time
+								)
+							}
+							else -> {
+								Timetable.TimeSlot.Same(period.events[0].toTodayType(), time)
+							}
+						}
+
+					}
 					2 -> {
 						val weekAEvent: Timetable.Event
 						val weekBEvent: Timetable.Event
@@ -144,8 +204,7 @@ internal data class CMSTimetable(
 						timeSlot = Timetable.TimeSlot.Different(
 							weekAEvent = weekAEvent,
 							weekBEvent = weekBEvent,
-							startTime = times.start,
-							endTime = times.end
+							time = time
 						)
 					}
 					else -> throw TimetableConversionException.InvalidEventCount(period.events.size)
@@ -158,11 +217,11 @@ internal data class CMSTimetable(
 		return Timetable(
 			Timetable.Week(
 				type = weekType.toTodayType(),
-				mondayEvents = events[0],
-				tuesdayEvents = events[1],
-				wednesdayEvents = events[2],
-				thursdayEvents = events[3],
-				fridayEvents = events[3]
+				mondayTimeslots = events[0],
+				tuesdayTimeslots = events[1],
+				wednesdayTimeslots = events[2],
+				thursdayTimeslots = events[3],
+				fridayTimeslots = events[3]
 			)
 		)
 	}

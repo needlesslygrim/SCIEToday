@@ -23,6 +23,8 @@ package dev.scie.today.lib.cmsConnector.util
  * @see Time
  */
 data class TimeRange(val start: Time, val end: Time) {
+	override fun toString(): String = "$start - $end"
+
 	companion object {
 		/** 2024 - 2025 lesson times. */
 		val lessonTimes = arrayOf(

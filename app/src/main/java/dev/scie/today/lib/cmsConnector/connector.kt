@@ -18,6 +18,8 @@
 package dev.scie.today.lib.cmsConnector
 
 import dev.scie.today.lib.cmsConnector.util.Time
+import dev.scie.today.lib.cmsConnector.util.TimeRange
+import dev.scie.today.ui.screens.Subject
 import kotlinx.serialization.Serializable
 
 
@@ -28,11 +30,11 @@ import kotlinx.serialization.Serializable
 data class Timetable(val week: Week) {
 	/** Represents a school-week, with a list of Events on Monday, Tuesday, etc, and the week type, A or B. */
 	data class Week(
-		val mondayEvents: List<TimeSlot>,
-		val tuesdayEvents: List<TimeSlot>,
-		val wednesdayEvents: List<TimeSlot>,
-		val thursdayEvents: List<TimeSlot>,
-		val fridayEvents: List<TimeSlot>,
+		val mondayTimeslots: List<TimeSlot>,
+		val tuesdayTimeslots: List<TimeSlot>,
+		val wednesdayTimeslots: List<TimeSlot>,
+		val thursdayTimeslots: List<TimeSlot>,
+		val fridayTimeslots: List<TimeSlot>,
 		val type: Type
 	) {
 		/** Type of school-week, A or B. */
@@ -48,22 +50,35 @@ data class Timetable(val week: Week) {
 	 * @see TimeSlot.Same
 	 */
 	sealed class TimeSlot(
-		val startTime: Time, val endTime: Time
+		val time: TimeRange
 	) {
 		/** Used when this timeslot is empty */
-		class Empty(startTime: Time, endTime: Time) : TimeSlot(startTime, endTime)
+		class Empty(time: TimeRange) : TimeSlot(time)
 
 		/**
-		 * Used when the lesson in this time slot is not the same in both week A & B.
+		 * Used when the event in this time slot is not the same in both week A & B.
 		 */
 		class Different(
-			val weekAEvent: Event, val weekBEvent: Event, startTime: Time, endTime: Time
-		) : TimeSlot(startTime, endTime)
+			val weekAEvent: Event, val weekBEvent: Event, time: TimeRange
+		) : TimeSlot(time)
 
 		/**
-		 * Used when the lesson in this time slot is the same in both week A & B.
+		 * Used when the event in this time slot is the same in both week A & B.
 		 */
-		class Same(val event: Event, startTime: Time, endTime: Time) : TimeSlot(startTime, endTime)
+		class Same(val event: Event, time: TimeRange) : TimeSlot(time)
+
+
+		/**
+		 * Used when the event in this timeslot only occurs in Week A, or only occurs in Week B.
+		 */
+		class OneWeekOnly(val type: Week.Type, val event: Event, time: TimeRange) : TimeSlot(time)
+
+		inline fun getEventByWeekType(type: Week.Type): Event? = when (this) {
+			is Different -> if (type == Week.Type.WeekA) { this.weekAEvent } else { this.weekBEvent }
+			is Empty -> null
+			is OneWeekOnly -> if (this.type == type) { this.event } else { null }
+			is Same -> this.event
+		}
 	}
 
 	/** A timetable event, as far as I know, these can only either be lessons or ECAs. */
@@ -71,7 +86,9 @@ data class Timetable(val week: Week) {
 		val id: UInt,
 		val type: Type,
 		val name: String,
+		val subject: Subject,
 		val room: String,
+		val teacher: String
 	) {
 		/** The types of event, lesson and ECA. */
 		enum class Type {
@@ -96,6 +113,7 @@ data class Attendance(val attendance: List<AttendanceRecord>) {
 	}
 }
 
+// FIXME: Remove from public API.
 /**
  * Most types from the CMS API should implement this interface, to provide a consistent conversion method. This is
  * "required" because the CMS API doesn't always have very good type definitions. However, if the original type is

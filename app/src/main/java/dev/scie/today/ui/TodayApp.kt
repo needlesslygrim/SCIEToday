@@ -1,10 +1,7 @@
 package dev.scie.today.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.scie.today.lib.cmsConnector.Timetable
+import dev.scie.today.lib.cmsConnector.util.TimeRange
 import dev.scie.today.navigation.AssessmentsScreen
 import dev.scie.today.ui.screens.HomeworkScreen
 import dev.scie.today.navigation.TodayAppFunction
@@ -26,28 +25,423 @@ import dev.scie.today.ui.screens.HomeScreen
 import dev.scie.today.ui.screens.HomeworkAssignment
 import dev.scie.today.ui.screens.Lesson
 import dev.scie.today.ui.screens.Subject
-import dev.scie.today.ui.screens.TAG
 import dev.scie.today.ui.screens.TimetableScreen
 import dev.scie.today.ui.screens.UnderConstructionScreen
 import dev.scie.today.ui.screens.WebCMSScreen
-import kotlinx.serialization.builtins.serializer
 
-/** Sample lessons used for offline testing */
+/** Sample timetable used for offline testing */
 // FIXME: Move elsewhere.
-val sampleLessons = listOf(
-	listOf(
-		Lesson(Subject.MorningRegistration, "B427", "A1.Wood3", "7:50 - 7:57", "FT"),
-		Lesson(Subject.Mathematics, "A411", "AL.A.MAT1", "8:00 - 9:20", "MEL"),
-		Lesson(Subject.Tutorial, "A707", "TUT.PHY.M5", "11:10 - 11:50", "STW"),
-		Lesson(Subject.History, "A318", "AS.D.HIS", "15:10 - 16:30", "ROS"),
-	), listOf(
-		Lesson(Subject.MorningRegistration, "B427", "A1.Wood3", "7:50 - 7:57", "FT"),
-		Lesson(Subject.Physics, "A715", "AS.E.PHY1", "8:00 - 9:20", "JUJ"),
-		Lesson(Subject.ComputerScience, "B432", "AS.F.CPU", "9:30 - 10:50", "SHW"),
-		Lesson(Subject.Tutorial, "A416", "TUT.MAT.TU5", "11:10 - 11:50", "RYA"),
-		Lesson(Subject.Mathematics, "A411", "AL.A.MAT1", "13:40 - 15:00", "MEL"),
-		Lesson(Subject.EPQ, "A612", "A1.B.EPQ.PHY", "15:10 - 16:30", "APS")
-	), listOf(), listOf(), listOf()
+val sampleTimetable = Timetable(
+	week = Timetable.Week(
+		type = Timetable.Week.Type.WeekA,
+		mondayTimeslots = listOf(
+			Timetable.TimeSlot.Empty(TimeRange(TimeRange.lessonTimes[0].start, TimeRange.lessonTimes[0].end)),
+			Timetable.TimeSlot.Empty(TimeRange(TimeRange.lessonTimes[1].start, TimeRange.lessonTimes[1].end)),
+			Timetable.TimeSlot.Empty(TimeRange(TimeRange.lessonTimes[2].start, TimeRange.lessonTimes[2].end)),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21278u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.B.CPU",
+					subject = Subject.ComputerScience,
+					room = "B433",
+					teacher = "SHW"
+				),
+				time = TimeRange(TimeRange.lessonTimes[3].start, TimeRange.lessonTimes[3].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21278u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.B.CPU",
+					subject = Subject.ComputerScience,
+					room = "B433",
+					teacher = "SHW"
+				),
+				time = TimeRange(TimeRange.lessonTimes[4].start, TimeRange.lessonTimes[4].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[5].start, TimeRange.lessonTimes[5].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[6].start, TimeRange.lessonTimes[6].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[7].start, TimeRange.lessonTimes[7].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[8].start, TimeRange.lessonTimes[8].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[9].start, TimeRange.lessonTimes[9].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[10].start, TimeRange.lessonTimes[10].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[11].start, TimeRange.lessonTimes[11].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[12].start, TimeRange.lessonTimes[12].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[13].start, TimeRange.lessonTimes[13].end)
+			),
+		),
+		tuesdayTimeslots = listOf(
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[0].start, TimeRange.lessonTimes[0].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[1].start, TimeRange.lessonTimes[1].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[2].start, TimeRange.lessonTimes[2].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21784u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.F.PHY1",
+					subject = Subject.Physics,
+					room = "A803",
+					teacher = "MIR"
+				),
+				time = TimeRange(TimeRange.lessonTimes[3].start, TimeRange.lessonTimes[3].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21784u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.F.PHY1",
+					subject = Subject.Physics,
+					room = "A803",
+					teacher = "MIR"
+				),
+				time = TimeRange(TimeRange.lessonTimes[4].start, TimeRange.lessonTimes[4].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[5].start, TimeRange.lessonTimes[5].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[6].start, TimeRange.lessonTimes[6].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[7].start, TimeRange.lessonTimes[7].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[8].start, TimeRange.lessonTimes[8].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[9].start, TimeRange.lessonTimes[9].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[10].start, TimeRange.lessonTimes[10].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21278u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.B.CPU",
+					subject = Subject.ComputerScience,
+					room = "B433",
+					teacher = "SHW"
+				),
+				time = TimeRange(TimeRange.lessonTimes[11].start, TimeRange.lessonTimes[11].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21278u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.B.CPU",
+					subject = Subject.ComputerScience,
+					room = "B433",
+					teacher = "SHW"
+				),
+				time = TimeRange(TimeRange.lessonTimes[12].start, TimeRange.lessonTimes[12].end)
+			),
+			// TODO: Temporary until I find out what the ID is for this ECA.
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 0u,
+					type = Timetable.Event.Type.ECA,
+					name = "SCIE DEV - Software Development",
+					subject = Subject.ECA,
+					room = "A411",
+					teacher = "RYA"
+				),
+				time = TimeRange(TimeRange.lessonTimes[13].start, TimeRange.lessonTimes[13].end)
+			),
+		),
+		wednesdayTimeslots = listOf(
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[0].start, TimeRange.lessonTimes[0].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[1].start, TimeRange.lessonTimes[1].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[2].start, TimeRange.lessonTimes[2].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[3].start, TimeRange.lessonTimes[3].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[4].start, TimeRange.lessonTimes[4].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 22042u,
+					type = Timetable.Event.Type.Lesson,
+					name = "A2.Wood3.PSHE",
+					subject = Subject.PSHE,
+					room = "A410",
+					teacher = "RYA"
+				),
+				time = TimeRange(TimeRange.lessonTimes[5].start, TimeRange.lessonTimes[5].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[6].start, TimeRange.lessonTimes[6].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[7].start, TimeRange.lessonTimes[7].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[8].start, TimeRange.lessonTimes[8].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[9].start, TimeRange.lessonTimes[9].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[10].start, TimeRange.lessonTimes[10].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[11].start, TimeRange.lessonTimes[11].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[12].start, TimeRange.lessonTimes[12].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[13].start, TimeRange.lessonTimes[13].end)
+			),
+		),
+		thursdayTimeslots = listOf(
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[0].start, TimeRange.lessonTimes[0].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[1].start, TimeRange.lessonTimes[1].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21471u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.C.HIS",
+					subject = Subject.History,
+					room = "A319",
+					teacher= "GOB"
+				),
+				time = TimeRange(TimeRange.lessonTimes[2].start, TimeRange.lessonTimes[2].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[3].start, TimeRange.lessonTimes[3].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[4].start, TimeRange.lessonTimes[4].end)
+			),
+			Timetable.TimeSlot.Empty(
+				time = TimeRange(TimeRange.lessonTimes[5].start, TimeRange.lessonTimes[5].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[6].start, TimeRange.lessonTimes[6].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[7].start, TimeRange.lessonTimes[7].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[8].start, TimeRange.lessonTimes[8].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[9].start, TimeRange.lessonTimes[9].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[10].start, TimeRange.lessonTimes[10].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[11].start, TimeRange.lessonTimes[11].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[12].start, TimeRange.lessonTimes[12].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[13].start, TimeRange.lessonTimes[13].end)
+			),
+		),
+		fridayTimeslots = listOf(
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[0].start, TimeRange.lessonTimes[0].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[1].start, TimeRange.lessonTimes[1].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[2].start, TimeRange.lessonTimes[2].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[3].start, TimeRange.lessonTimes[3].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21585u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AP.E.CPU",
+					subject = Subject.ComputerScience,
+					room = "B431",
+					teacher = "SHW",
+				),
+				time = TimeRange(TimeRange.lessonTimes[4].start, TimeRange.lessonTimes[4].end)
+			),
+			Timetable.TimeSlot.Empty(
+				time = TimeRange(TimeRange.lessonTimes[5].start, TimeRange.lessonTimes[5].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21784u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.F.PHY1",
+					subject = Subject.Physics,
+					room = "A803",
+					teacher = "MIR"
+				),
+				time = TimeRange(TimeRange.lessonTimes[6].start, TimeRange.lessonTimes[6].end)
+			),
+			Timetable.TimeSlot.Same(
+				event = Timetable.Event(
+					id = 21784u,
+					type = Timetable.Event.Type.Lesson,
+					name = "AL.F.PHY1",
+					subject = Subject.Physics,
+					room = "A803",
+					teacher = "MIR"
+				),
+				time = TimeRange(TimeRange.lessonTimes[7].start, TimeRange.lessonTimes[7].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[8].start, TimeRange.lessonTimes[8].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[9].start, TimeRange.lessonTimes[9].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[10].start, TimeRange.lessonTimes[10].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[11].start, TimeRange.lessonTimes[11].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[12].start, TimeRange.lessonTimes[12].end)
+			),
+			Timetable.TimeSlot.Empty(
+				TimeRange(TimeRange.lessonTimes[13].start, TimeRange.lessonTimes[13].end)
+			),
+		),
+	)
 )
 
 /** Sample assignment list used for offline testing */
@@ -158,7 +552,7 @@ fun TodayApp(
 				}
 				composable<TimetableScreen> {
 					TimetableScreen(
-						lessons = sampleLessons,
+						timetable = sampleTimetable,
 						modifier = paddingModifier
 					)
 				}

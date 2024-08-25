@@ -25,6 +25,6 @@ value class Time private constructor(private val time: UInt) {
 	constructor(hour: UShort, minute: UShort) : this(hour.toUInt().shl(16) or minute.toUInt())
 
 	override fun toString(): String {
-		return "Time(hour=$hour, minute=$minute)";
+		return "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 	}
 }
