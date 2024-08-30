@@ -100,7 +100,8 @@ data class Lesson(
 	val subject: Subject,
 	/** The classroom in which the lesson takes place. */
 	val classroom: String,
-	/** The long name which distinguishes different class groups from each other, e.g. A1 Mathematics
+	/**
+	 * The long name which distinguishes different class groups from each other, e.g. A1 Mathematics
 	 * 1 and A1 Mathematics 2.
 	 */
 	val className: String,
@@ -120,12 +121,13 @@ val days = arrayOf(
 )
 
 // TODO: Merch with `days`.
-/** Test tags for the segmented buttons for each day of the week */
+/** Test tags for the segmented buttons for each day of the week. */
 val dayTestTags = arrayOf(
 	"days:mon", "days:tue", "days:wed", "days:thur", "days:fri"
 )
 
-/** Stores a nullable [Timetable.Event], a [TimeRange], and whether or not it is a double
+/**
+ * Stores a nullable [Timetable.Event], a [TimeRange], and whether or not it is a double
  * period. Used so that double periods can be collapsed into one listing.
 */
 data class TimetableListing(val event: Timetable.Event?, val time: TimeRange)
