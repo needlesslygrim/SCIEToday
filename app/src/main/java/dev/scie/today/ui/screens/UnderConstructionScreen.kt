@@ -30,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import dev.scie.today.R
 import dev.scie.today.navigation.TodayAppFunction
-import dev.scie.today.navigation.TodayScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -41,7 +40,7 @@ fun UnderConstructionScreen(modifier: Modifier = Modifier) {
 		modifier = modifier.fillMaxSize()
 	) {
 		Icon(
-			painter = painterResource(R.drawable.ic_construction_unfilled_48px),
+			painter = painterResource(R.drawable.ic_construction_unfilled_48dp),
 			contentDescription = null
 		)
 		Text(stringResource(R.string.under_construction))
