@@ -12,7 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.scie.today.lib.cmsConnector.House
 import dev.scie.today.lib.cmsConnector.Timetable
+import dev.scie.today.lib.cmsConnector.UserInformation
 import dev.scie.today.lib.cmsConnector.util.TimeRange
 import dev.scie.today.navigation.AssessmentsScreen
 import dev.scie.today.ui.screens.HomeworkScreen
@@ -528,6 +530,12 @@ fun TodayApp(
 				composable<HomeScreen> {
 					HomeScreen(
 						onClickMainCard = {},
+						userInformation = UserInformation(
+							id = 22901u,
+							name = "Erick Howard",
+							formGroup = "A1.Wood3",
+							house = House.Wood
+						),
 
 						latestNoticeDate = "02-02-2024",
 						latestNoticeName = "2024 SCIE Jan Newsletter",
