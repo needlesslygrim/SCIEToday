@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SCIEToday</string>
+    <string name="login">登录</string>
+    <string name="subject_history">历史</string>
+    <string name="subject_geography">地理</string>
+    <string name="timetable_monday">周一</string>
+    <string name="timetable_tuesday">周二</string>
+    <string name="timetable_wednesday">周三</string>
+    <string name="timetable_thursday">周四</string>
+    <string name="timetable_friday">周五</string>
+    <string name="subject_mathematics">数学</string>
+    <string name="subject_computer_science">计算机科学</string>
+    <string name="subject_physics">物理</string>
+    <string name="timetable_screen">课程表</string>
+    <string name="homework_screen">作业</string>
+    <string name="good_morning">早上好</string>
+    <string name="good_evening">晚上好</string>
+    <string name="good_night">晚安</string>
+</resources>
